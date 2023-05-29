@@ -11,9 +11,14 @@ def load_people(filename="people.csv"):
     with open(filename) as r:
         people = csv.reader(r)
         for person in people:
-            parsed_people[person[0]] = [person[1], person[2]]
-            if not person[1]:
-                parsed_people[person[0]][0] = person[0].title()
+            if person:  # Ignorar linhas vazias
+                if len(person) >= 3:
+                    nick = person[0]
+                    name = person[1] if person[1] else person[0].title()
+                    desc = person[2]
+                    parsed_people[nick] = [name, desc]
+                else:
+                    print(f"Invalid person data: {person}")
     return parsed_people
 
 
