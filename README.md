@@ -40,3 +40,6 @@ disclaimers
 
 This is how my brain organizes people and introductions, I have no idea if it'll work for you. I'd love ideas to make
 this better!
+
+(preciso atualizar o read.me 29/05/2023)
+
