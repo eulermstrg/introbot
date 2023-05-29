@@ -1,3 +1,4 @@
 name = "Euler Magno"
-valediction = "Cheers"
+valediction = "Att"
 closing = "I think you'll find quite a bit to talk about."
+

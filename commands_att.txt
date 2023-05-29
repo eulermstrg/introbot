@@ -1,0 +1,25 @@
+# ***Sempre usar os comandos no terminal***
+
+# ***Nota:***
+# Se não existir nenhum arquivo 'people.csv, ao inserir a primeira, o programa criará automaticamente.
+# Usaremos uma pessoa de Exemplo para demonstrar os comandos (Euler Magno)
+
+# Para adicionar uma pessoa:
+python intro.py -a Euler Magno "Escreva sua mensagem de introdução aqui"
+
+# Para atualizar uma pessoa:
+python intro.py -u Euler nova_descricao
+# Isso irá atualizar a pessoa "euler" com a nova descrição fornecida.
+
+# Você também pode fornecer um novo nome para a pessoa, se desejar:
+python intro.py -u Euler nova_descricao novo_nome
+
+# Para deletar uma pessoa:
+python intro.py -d Euler
+
+# Para rodar o script de criação de introdução para emails:
+python intro.py Euler Euler
+
+
+# Para rodar o script de criação de introdução para emails com uma mensagem de encerramento personalizada:
+python intro.py Euler Euler -m "Digite sua mensagem de encerramento aqui"

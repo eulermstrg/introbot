@@ -1,7 +1,7 @@
 import sys
-import subprocess
 import csv
 from optparse import OptionParser
+import pyperclip
 
 import settings
 
@@ -22,10 +22,37 @@ def load_people(filename="people.csv"):
     return parsed_people
 
 
-def save_person(nick, desc, name=None, filename="people.csv"):
-    with open(filename, 'a') as csvfile:
+def save_people(people, filename="people.csv"):
+    with open(filename, 'w', newline='') as csvfile:
         w = csv.writer(csvfile)
-        w.writerow([nick, name, desc])
+        for nick, values in people.items():
+            w.writerow([nick, values[0], values[1]])
+
+
+def add_person(nick, desc, name=None, filename="people.csv"):
+    people = load_people(filename)
+    people[nick] = [name, desc]
+    save_people(people, filename)
+
+
+def update_person(nick, desc, name=None, filename="people.csv"):
+    people = load_people(filename)
+    if nick in people:
+        people[nick] = [name, desc]
+        save_people(people, filename)
+        print(f"Person '{nick}' updated successfully.")
+    else:
+        print(f"Person '{nick}' not found.")
+
+
+def delete_person(nick, filename="people.csv"):
+    people = load_people(filename)
+    if nick in people:
+        del people[nick]
+        save_people(people, filename)
+        print(f"Person '{nick}' deleted successfully.")
+    else:
+        print(f"Person '{nick}' not found.")
 
 
 def write_introduction(people, message):
@@ -42,23 +69,37 @@ def write_introduction(people, message):
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-a", "--add", dest="add", action="store_true")
+    parser.add_option("-u", "--update", dest="update", action="store_true")
+    parser.add_option("-d", "--delete", dest="delete", action="store_true")
     parser.add_option("-m", "--message", dest="message", default=False, action="store")
     (options, args) = parser.parse_args()
 
-    if options.add:  # we're adding a new person
+    if options.add:  # Adicionar nova pessoa
         if len(args) == 2:
-            save_person(args[0], args[1])
+            add_person(args[0], args[1])
         else:
-            save_person(args[0], args[2], args[1])
+            add_person(args[0], args[2], args[1])
 
-    else:  # write the intro
+    elif options.update:  # Atualizar pessoa existente
+        if len(args) == 2:
+            update_person(args[0], args[1])
+        else:
+            update_person(args[0], args[2], args[1])
+
+    elif options.delete:  # Deletar pessoa
+        if len(args) == 1:
+            delete_person(args[0])
+        else:
+            print("Invalid arguments. Please provide the nickname of the person to delete.")
+
+    else:  # Escrever a introdução
         try:
             people = load_people()
-        except(FileNotFoundError):
+        except FileNotFoundError:
             print("No people!")
             sys.exit()
 
-        introducing = {}  # get the people data from the set
+        introducing = {}  # Obter os dados das pessoas informadas
         for person in args:
             try:
                 introducing[person] = people[person]
@@ -68,5 +109,5 @@ if __name__ == '__main__':
 
         msg = write_introduction(introducing, options.message)
         print(msg)
-        p = subprocess.Popen(["pbcopy"], stdin=subprocess.PIPE)
-        p.communicate(msg.encode('utf-8'))
+        pyperclip.copy(msg)
+        print("Message copied to clipboard.")
